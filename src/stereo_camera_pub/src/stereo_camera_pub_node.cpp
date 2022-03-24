@@ -13,7 +13,9 @@ int main(int argc, char *argv[])
     VideoCapture cam0("nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM), width=640, height=480, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv flip-method=0 ! video/x-raw, width=640, height=480, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink", cv::CAP_GSTREAMER);
     VideoCapture cam1("nvarguscamerasrc sensor-id=1 ! video/x-raw(memory:NVMM), width=640, height=480, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv flip-method=0 ! video/x-raw, width=640, height=480, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink", cv::CAP_GSTREAMER);
 
-    if (!cam0.isOpened())
+    cam0.
+
+        if (!cam0.isOpened())
     {
         printf("cam0 is not opened.\n");
         return -1;
@@ -23,6 +25,9 @@ int main(int argc, char *argv[])
         printf("cam1 is not opened.\n");
         return -1;
     }
+
+    double fps = cam0.get(CAP_PROP_FPS);
+    cout << "Frames per second using cam0 : " << fps << endl;
 
     // Init the Node Publisher and configure it.
     ros::init(argc, argv, "stereo_image_publisher");
