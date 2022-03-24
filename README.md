@@ -73,7 +73,7 @@ Waveshare Documentation: [IMX219-83 Stereo Camera](https://www.waveshare.com/wik
 
 - JetPack 4.6.1
 - OpenCV (Installed with JetPack)
-- ZSH (If you are using bash adapt your command in Step 4) 
+- ZSH (If you are using bash adapt your command in Step 4)
 
 ## Install ROS
 
@@ -93,41 +93,41 @@ Waveshare Documentation: [IMX219-83 Stereo Camera](https://www.waveshare.com/wik
 
 ## Integrate this repo into your ROS Workspace.
 
-1. Clone this repo as a ROS Workspace.
+**1. Clone this repo as a ROS Workspace.**
 
 ```command
 cd ~/
 git clone https://github.com/adolfos94/ROS-Stereo-Camera.git
 ```
 
-2. Navigate to the new ROS Workspace or you can integrate the source files to another ROS Workspace.
+**2. Navigate to the new ROS Workspace or you can integrate the source files to another ROS Workspace.**
 
 ```command
 cd ROS-Stereo-Camera
 ```
 
-3. Build the package in the catking workspace.
+**3. Build the package in the catking workspace.**
 
 ```console
 $ adolfo in ROS-Stereo-Camera at jetson-nano
 catkin_make
 ```
 
-4. Add the workspace to your ROS environment.
+**4. Add the workspace to your ROS environment.**
 
 ```console
 $ adolfo in ROS-Stereo-Camera at jetson-nano
 source devel/setup.zsh
 ```
 
-5. Start the Publisher.
+**5. Start the Publisher.**
 
 ```console
 $ adolfo in ROS-Stereo-Camera at jetson-nano
 rosrun stereo_camera_pub stereo_camera_pub_node
 ```
 
-5. Start the Suscriber.
+**6. Start the Suscriber.**
 
 ```console
 $ adolfo in ROS-Stereo-Camera at jetson-nano
