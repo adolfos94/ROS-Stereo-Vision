@@ -4,7 +4,7 @@ Cameras provide image data to the robot that can be used for object identificati
 
 ### This package contains:
 
-- **Stereo Camera Publisher:** Obtains left and right images from IMX219-83 Stereo Camera.
+- **Stereo Camera Publisher:** Obtains left and right images from **IMX219-83 Stereo Camera**.
 - **Stereo Camera Suscriber:** Displays the images using OpenCV.
 
 # Hardware Stereo Module
@@ -57,7 +57,7 @@ Waveshare Documentation: [IMX219-83 Stereo Camera](https://www.waveshare.com/wik
   ./double-camera-display
   ```
 
-- <span style="color:red"> If you find that the image captured is red. You can try to download .isp file and installed:</span>
+- <span style="color:red"> If you find that the image captured is red. You can try to download .isp file and install it:</span>
 
   ```console
   wget https://www.waveshare.com/w/upload/e/eb/Camera_overrides.tar.gz
@@ -73,6 +73,7 @@ Waveshare Documentation: [IMX219-83 Stereo Camera](https://www.waveshare.com/wik
 
 - JetPack 4.6.1
 - OpenCV (Installed with JetPack)
+- ZSH (If you are using bash adapt your command in Step 4) 
 
 ## Install ROS
 
