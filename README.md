@@ -79,7 +79,7 @@ Waveshare Documentation: [IMX219-83 Stereo Camera](https://www.waveshare.com/wik
 
 - Follow steps [Ubuntu install of ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu).
 
-  - I recommend to install
+  *I recommend to install*
 
   ```command
   sudo apt install ros-melodic-desktop-full
