@@ -31,7 +31,6 @@ int main(int argc, char *argv[])
     cout << "Frames per second using cam0 : " << cam0.get(cv::CAP_PROP_FPS) << endl;
     cout << "Resolution image cam1 : " << cv::Size(cam1.get(cv::CAP_PROP_FRAME_WIDTH), cam1.get(cv::CAP_PROP_FRAME_HEIGHT)) << endl;
     cout << "Frames per second using cam1 : " << cam1.get(cv::CAP_PROP_FPS) << endl;
-    cout << "Using intrinsic params: " << STEREO_PARAMS_PATH << endl;
 
     // Load Stereo Calibration Parameters
     cv::Mat Map1x, Map1y, Map2x, Map2y;
@@ -41,6 +40,8 @@ int main(int argc, char *argv[])
     setereodatafs["Map2x"] >> Map2x;
     setereodatafs["Map2y"] >> Map2y;
     setereodatafs.release();
+
+    cout << "Using instrinsic params: " << STEREO_PARAMS_PATH << endl;
 
     // Init the Node Publisher and configure it.
     ros::init(argc, argv, "stereo_image_publisher");
