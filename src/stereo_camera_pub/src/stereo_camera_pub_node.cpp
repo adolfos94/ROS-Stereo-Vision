@@ -34,12 +34,13 @@ int main(int argc, char *argv[])
 
     // Load Stereo Calibration Parameters
     cv::Mat Map1x, Map1y, Map2x, Map2y;
-    cv::FileStorage setereodatafs = cv::FileStorage(STEREO_PARAMS_PATH, cv::FileStorage::READ);
-    setereodatafs["Map1x"] >> Map1x;
-    setereodatafs["Map1y"] >> Map1y;
-    setereodatafs["Map2x"] >> Map2x;
-    setereodatafs["Map2y"] >> Map2y;
-    setereodatafs.release();
+    cv::FileStorage stereodatafs;
+    stereodatafs.open(STEREO_PARAMS_PATH, cv::FileStorage::READ);
+    stereodatafs["Map1x"] >> Map1x;
+    stereodatafs["Map1y"] >> Map1y;
+    stereodatafs["Map2x"] >> Map2x;
+    stereodatafs["Map2y"] >> Map2y;
+    stereodatafs.release();
 
     cout << "Using instrinsic params: " << STEREO_PARAMS_PATH << endl;
 
@@ -67,11 +68,11 @@ int main(int argc, char *argv[])
         }
 
         // Undistord stereo images
-        remap(cam0Frame, cam0RectFrame, Map1x, Map1y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
-        remap(cam1Frame, cam1RectFrame, Map2x, Map2y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
+        remap(cam0Frame, cam0Frame, Map1x, Map1y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
+        remap(cam1Frame, cam1Frame, Map2x, Map2y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
 
-        imageLeftMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam0RectFrame).toImageMsg();
-        imageRightMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam1RectFrame).toImageMsg();
+        imageLeftMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam0Frame).toImageMsg();
+        imageRightMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam1Frame).toImageMsg();
 
         pub_left_camera.publish(imageLeftMsg);
         pub_right_camera.publish(imageRightMsg);
