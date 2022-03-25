@@ -8,9 +8,11 @@
 using namespace cv;
 using namespace std;
 
+constexpr char STEREO_PARAMS_PATH[] = "./src/stereo_camera_pub/data/setereocalib.yml";
+
 int main(int argc, char *argv[])
 {
-    std::string stereodatapath = argv[1] ? argv[1] : "";
+
     VideoCapture cam0("nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM), width=640, height=480, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv flip-method=0 ! video/x-raw, width=640, height=480, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink", cv::CAP_GSTREAMER);
     VideoCapture cam1("nvarguscamerasrc sensor-id=1 ! video/x-raw(memory:NVMM), width=640, height=480, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv flip-method=0 ! video/x-raw, width=640, height=480, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink", cv::CAP_GSTREAMER);
 
@@ -29,11 +31,11 @@ int main(int argc, char *argv[])
     cout << "Frames per second using cam0 : " << cam0.get(cv::CAP_PROP_FPS) << endl;
     cout << "Resolution image cam1 : " << cv::Size(cam1.get(cv::CAP_PROP_FRAME_WIDTH), cam1.get(cv::CAP_PROP_FRAME_HEIGHT)) << endl;
     cout << "Frames per second using cam1 : " << cam1.get(cv::CAP_PROP_FPS) << endl;
-    cout << "Using intrinsic params: " << stereodatapath << endl;
+    cout << "Using intrinsic params: " << STEREO_PARAMS_PATH << endl;
 
     // Load Stereo Calibration Parameters
     cv::Mat Map1x, Map1y, Map2x, Map2y;
-    cv::FileStorage setereodatafs = cv::FileStorage(stereodatapath, cv::FileStorage::READ);
+    cv::FileStorage setereodatafs = cv::FileStorage(STEREO_PARAMS_PATH, cv::FileStorage::READ);
     setereodatafs["Map1x"] >> Map1x;
     setereodatafs["Map1y"] >> Map1y;
     setereodatafs["Map2x"] >> Map2x;

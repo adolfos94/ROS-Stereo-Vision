@@ -120,7 +120,6 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
 # include
-  data
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
 )
