@@ -27,7 +27,17 @@ int main(int argc, char *argv[])
     cout << "Resolution image cam0 : " << cv::Size(cam0.get(cv::CAP_PROP_FRAME_WIDTH), cam0.get(cv::CAP_PROP_FRAME_HEIGHT)) << endl;
     cout << "Frames per second using cam0 : " << cam0.get(cv::CAP_PROP_FPS) << endl;
     cout << "Resolution image cam1 : " << cv::Size(cam1.get(cv::CAP_PROP_FRAME_WIDTH), cam1.get(cv::CAP_PROP_FRAME_HEIGHT)) << endl;
-    cout << "Frames per second using cam1 : " << cam1.get(cv::CAP_PROP_FPS) << endl;
+    cout << "Frames <<per second using cam1 : " << cam1.get(cv::CAP_PROP_FPS) << endl;
+    cout << "Using intrinsic params: " << argv[1] << endl;
+
+    // Load Stereo Calibration Parameters
+    cv::Mat Map1x, Map1y, Map2x, Map2y;
+    cv::FileStorage setereodatafs = cv::FileStorage(argv[1], cv::FileStorage::READ);
+    setereodatafs["Map1x"] >> Map1x;
+    setereodatafs["Map1y"] >> Map1y;
+    setereodatafs["Map2x"] >> Map2x;
+    setereodatafs["Map2y"] >> Map2y;
+    setereodatafs.release();
 
     // Init the Node Publisher and configure it.
     ros::init(argc, argv, "stereo_image_publisher");
@@ -51,6 +61,10 @@ int main(int argc, char *argv[])
             ROS_INFO("%s", "No frame info");
             return 1;
         }
+
+        // Undistord stereo images
+        remap(leftFrame, leftFrame, Map1x, Map1y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
+        remap(rightFrame, rightFrame, Map2x, Map2y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
 
         imageLeftMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", leftFrame).toImageMsg();
         imageRightMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", rightFrame).toImageMsg();
