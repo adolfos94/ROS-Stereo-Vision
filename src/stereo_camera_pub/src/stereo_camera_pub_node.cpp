@@ -79,4 +79,9 @@ int main(int argc, char *argv[])
         ros::spinOnce();
         loop_rate.sleep();
     }
+
+    cam0.release();
+    cam1.release();
+
+    return 0;
 }
