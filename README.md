@@ -73,6 +73,10 @@ Waveshare Documentation: [IMX219-83 Stereo Camera](https://www.waveshare.com/wik
 
 - JetPack 4.6.1
 - OpenCV (Installed with JetPack)
+  **Optional**
+  ```command
+  sudo apt install libopencv-dev=3.2.0+dfsg-4ubuntu0.1
+  ```
 - ZSH (If you are using bash adapt your command in Step 4)
 
 ## Install ROS
