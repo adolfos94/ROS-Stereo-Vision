@@ -8,7 +8,7 @@
 using namespace cv;
 using namespace std;
 
-constexpr char STEREO_PARAMS_PATH[] = "./src/stereo_camera_pub/data/setereocalib.yml";
+constexpr char STEREO_PARAMS_PATH[] = "./src/stereo_camera_pub/data/stereocalib.yml";
 
 int main(int argc, char *argv[])
 {
