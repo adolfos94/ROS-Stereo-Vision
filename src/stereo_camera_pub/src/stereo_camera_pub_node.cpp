@@ -52,22 +52,22 @@ int main(int argc, char *argv[])
     sensor_msgs::ImagePtr imageLeftMsg;
     sensor_msgs::ImagePtr imageRightMsg;
 
-    Mat leftFrame;
-    Mat rightFrame;
+    Mat cam0Frame, cam0RectFrame;
+    Mat cam1Frame, cam1RectFrame;
 
     ros::Rate loop_rate(10);
     while (nh.ok())
     {
-        if (!cam0.read(leftFrame) ||
-            !cam1.read(rightFrame))
+        if (!cam0.read(cam0Frame) ||
+            !cam1.read(cam1Frame))
         {
             ROS_INFO("%s", "No frame info");
             return 1;
         }
 
         // Undistord stereo images
-        remap(leftFrame, leftFrame, Map1x, Map1y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
-        remap(rightFrame, rightFrame, Map2x, Map2y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
+        remap(cam0Frame, cam0RectFrame, Map1x, Map1y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
+        remap(cam1Frame, cam1RectFrame, Map2x, Map2y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
 
         imageLeftMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", leftFrame).toImageMsg();
         imageRightMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", rightFrame).toImageMsg();
