@@ -66,11 +66,11 @@ int main(int argc, char *argv[])
         }
 
         // Undistord stereo images
-        remap(cam0Frame, cam0RectFrame, Map1x, Map1y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
-        remap(cam1Frame, cam1RectFrame, Map2x, Map2y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
+        // remap(cam0Frame, cam0RectFrame, Map1x, Map1y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
+        // remap(cam1Frame, cam1RectFrame, Map2x, Map2y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
 
-        imageLeftMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam0RectFrame).toImageMsg();
-        imageRightMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam1RectFrame).toImageMsg();
+        imageLeftMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam0Frame).toImageMsg();
+        imageRightMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam1Frame).toImageMsg();
 
         pub_left_camera.publish(imageLeftMsg);
         pub_right_camera.publish(imageRightMsg);
