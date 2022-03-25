@@ -54,8 +54,8 @@ int main(int argc, char *argv[])
     sensor_msgs::ImagePtr imageLeftMsg;
     sensor_msgs::ImagePtr imageRightMsg;
 
-    Mat cam0Frame, cam0RectFrame;
-    Mat cam1Frame, cam1RectFrame;
+    Mat cam0Frame;
+    Mat cam1Frame;
 
     ros::Rate loop_rate(10);
     while (nh.ok())

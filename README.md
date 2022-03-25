@@ -4,7 +4,7 @@ Cameras provide image data to the robot that can be used for object identificati
 
 ### This package contains:
 
-- **Stereo Camera Publisher:** Obtains left and right images from **IMX219-83 Stereo Camera**.
+- **Stereo Camera Publisher:** Obtains left and right rectified images from **IMX219-83 Stereo Camera**.
 - **Stereo Camera Suscriber:** Displays the images using OpenCV.
 
 # Hardware Stereo Module
@@ -147,7 +147,7 @@ $ adolfo in ROS-Stereo-Camera at jetson-nano
 rosrun stereo_camera_sub stereo_camera_sub_node
 ```
 
-![Example Stereo Camera](/res/stereo_example.png "Example Stereo Camera")
+![Example Stereo Camera](/res/stereo_example_rect.png "Example Stereo Camera")
 
 # Modules
 
