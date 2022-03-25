@@ -8,7 +8,7 @@
 using namespace cv;
 using namespace std;
 
-constexpr char STEREO_PARAMS_PATH[] = "./src/stereo_camera_pub/data/stereocalib.yml";
+constexpr char STEREO_PARAMS_PATH[] = "./Stereo Calibration/data/stereocalib.yml";
 
 int main(int argc, char *argv[])
 {
@@ -66,15 +66,17 @@ int main(int argc, char *argv[])
         }
 
         // Undistord stereo images
-        // remap(cam0Frame, cam0RectFrame, Map1x, Map1y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
-        // remap(cam1Frame, cam1RectFrame, Map2x, Map2y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
+        remap(cam0Frame, cam0RectFrame, Map1x, Map1y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
+        remap(cam1Frame, cam1RectFrame, Map2x, Map2y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
 
-        imageLeftMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam0Frame).toImageMsg();
-        imageRightMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam1Frame).toImageMsg();
+        imageLeftMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam0RectFrame).toImageMsg();
+        imageRightMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam1RectFrame).toImageMsg();
 
         pub_left_camera.publish(imageLeftMsg);
         pub_right_camera.publish(imageRightMsg);
-        cv::waitKey(1);
+
+        if (cv::waitKey(30) == 27)
+            break;
 
         ros::spinOnce();
         loop_rate.sleep();
