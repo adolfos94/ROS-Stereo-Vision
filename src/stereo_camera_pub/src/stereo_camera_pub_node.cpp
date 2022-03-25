@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
         remap(cam0Frame, cam0RectFrame, Map1x, Map1y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
         remap(cam1Frame, cam1RectFrame, Map2x, Map2y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
 
-        imageLeftMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", leftFrame).toImageMsg();
-        imageRightMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", rightFrame).toImageMsg();
+        imageLeftMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam0RectFrame).toImageMsg();
+        imageRightMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam1RectFrame).toImageMsg();
 
         pub_left_camera.publish(imageLeftMsg);
         pub_right_camera.publish(imageRightMsg);
