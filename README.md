@@ -138,4 +138,4 @@ rosrun stereo_camera_sub stereo_camera_sub_node
 
 # Modules
 
-## [Stereo Rectification](/Stereo%20Calibration/README.md)
+## [Stereo Rectification](/Stereo%20Calibration/)
