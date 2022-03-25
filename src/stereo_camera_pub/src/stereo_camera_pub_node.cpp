@@ -35,12 +35,12 @@ int main(int argc, char *argv[])
 
     // Load Stereo Calibration Parameters
     cv::Mat Map1x, Map1y, Map2x, Map2y;
-    // cv::FileStorage setereodatafs = cv::FileStorage(STEREO_PARAMS_PATH, cv::FileStorage::READ);
-    // setereodatafs["Map1x"] >> Map1x;
-    // setereodatafs["Map1y"] >> Map1y;
-    // setereodatafs["Map2x"] >> Map2x;
-    // setereodatafs["Map2y"] >> Map2y;
-    // setereodatafs.release();
+    cv::FileStorage setereodatafs = cv::FileStorage(STEREO_PARAMS_PATH, cv::FileStorage::READ);
+    setereodatafs["Map1x"] >> Map1x;
+    setereodatafs["Map1y"] >> Map1y;
+    setereodatafs["Map2x"] >> Map2x;
+    setereodatafs["Map2y"] >> Map2y;
+    setereodatafs.release();
 
     // Init the Node Publisher and configure it.
     ros::init(argc, argv, "stereo_image_publisher");
