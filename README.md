@@ -73,6 +73,19 @@ Waveshare Documentation: [IMX219-83 Stereo Camera](https://www.waveshare.com/wik
 
 - JetPack 4.6.1
 - OpenCV (Installed with JetPack)
+  - **Optional**
+    1. Change the file
+    ```command
+    nano /opt/ros/melodic/share/cv_bridge/cmake/cv_bridgeConfig.cmake
+    ```
+    2. Change these lines:
+    ```command
+    set(_include_dirs "include;/usr/include;/usr/include/opencv")
+    ```
+    to:
+    ```command
+    set(_include_dirs "include;/usr/include;/usr/include/opencv4")
+    ```
 - ZSH (If you are using bash adapt your command in Step 4)
 
 ## Install ROS
