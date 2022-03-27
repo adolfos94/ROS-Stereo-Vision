@@ -1,4 +1,4 @@
-# ROS Stereo Camera
+# ROS Stereo Vision
 
 Cameras provide image data to the robot that can be used for object identification, tracking and manipulation tasks. This is a ROS Package for Jetson CSI Stereo Camera for Computer Vision Tasks.
 
@@ -6,6 +6,9 @@ Cameras provide image data to the robot that can be used for object identificati
 
 - **Stereo Camera Publisher:** Obtains left and right rectified images from **IMX219-83 Stereo Camera**.
 - **Stereo Camera Suscriber:** Displays the images using OpenCV.
+- **Stereo Camera Rectification:** Calibrate your stereo camera.
+- **Stereo Depth Perception:** 
+- **Obstacle Avoidance:**
 
 # Hardware Stereo Module
 
@@ -152,3 +155,4 @@ rosrun stereo_camera_sub stereo_camera_sub_node
 # Modules
 
 ## [Stereo Rectification](/Stereo%20Calibration/)
+## [Stereo Depth Perception](/Stereo%20Depth%20Perception/)
