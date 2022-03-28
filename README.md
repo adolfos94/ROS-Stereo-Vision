@@ -79,7 +79,7 @@ Waveshare Documentation: [IMX219-83 Stereo Camera](https://www.waveshare.com/wik
   - **Optional**
     1. Change the file
     ```command
-    nano /opt/ros/melodic/share/cv_bridge/cmake/cv_bridgeConfig.cmake
+    sudo nano /opt/ros/melodic/share/cv_bridge/cmake/cv_bridgeConfig.cmake
     ```
     2. Change these lines:
     ```command
