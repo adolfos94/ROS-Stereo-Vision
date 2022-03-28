@@ -8,13 +8,13 @@ namespace StereoDepthPerceptionLib
 	}
 
 	VOID Compute(
-		CONST IN cv::Mat& leftImage,
-		CONST IN cv::Mat& rightImage)
+		CONST IN cv::Mat &leftImage,
+		CONST IN cv::Mat &rightImage)
 	{
 		StereoDepthPerception::Compute(leftImage, rightImage);
 	}
 
-	VOID GetDepthImage(OUT cv::Mat& depthImage)
+	VOID GetDepthImage(OUT cv::Mat &depthImage)
 	{
 		StereoDepthPerception::GetDepthImage(depthImage);
 	}

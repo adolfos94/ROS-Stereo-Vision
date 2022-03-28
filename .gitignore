@@ -16,6 +16,8 @@
 *.dylib
 *.dll
 
+!libStereoDepthPerceptionLib.so
+
 # Fortran module files
 *.mod
 *.smod

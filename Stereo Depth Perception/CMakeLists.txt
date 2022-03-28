@@ -16,12 +16,11 @@ ADD_SUBDIRECTORY(StereoDepthPerceptionLib)
 # Add source to this project's executable.
 ADD_EXECUTABLE(StereoDepthPerception 
 	"main.cpp"
-    	"source/WebCam/WebCam.cpp"
+    "source/WebCam/WebCam.cpp"
 )
 
 message(STATUS "CUDA LIBRARIES: ${CUDA_LIBRARIES}")
 message(STATUS "CUDA CUBLAS LIBRARIES: ${CUDA_CUBLAS_LIBRARIES}")
 
 TARGET_LINK_LIBRARIES(StereoDepthPerception ${OpenCV_LIBS}) 
-TARGET_LINK_LIBRARIES(StereoDepthPerception ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES})
-TARGET_LINK_LIBRARIES(StereoDepthPerception "StereoDepthPerceptionLib" -lcublas)
+TARGET_LINK_LIBRARIES(StereoDepthPerception "StereoDepthPerceptionLib" ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES})
