@@ -1,47 +1,47 @@
 #include "Stereo Depth Perception.h"
 #include "../src/CUDA/Wrapper.h"
 
-float* StereoDepthPerception::PenaltyMatrix_GPU = nullptr;
+float *StereoDepthPerception::PenaltyMatrix_GPU = nullptr;
 
-float* StereoDepthPerception::LeftImage_GPU = nullptr;
-float* StereoDepthPerception::RightImage_GPU = nullptr;
+float *StereoDepthPerception::LeftImage_GPU = nullptr;
+float *StereoDepthPerception::RightImage_GPU = nullptr;
 
-float* StereoDepthPerception::GrayLeftImage_GPU = nullptr;
-float* StereoDepthPerception::GrayRightImage_GPU = nullptr;
+float *StereoDepthPerception::GrayLeftImage_GPU = nullptr;
+float *StereoDepthPerception::GrayRightImage_GPU = nullptr;
 
-float* StereoDepthPerception::GxLeft_GPU = nullptr;
-float* StereoDepthPerception::GyLeft_GPU = nullptr;
-float* StereoDepthPerception::GxRight_GPU = nullptr;
-float* StereoDepthPerception::GyRight_GPU = nullptr;
+float *StereoDepthPerception::GxLeft_GPU = nullptr;
+float *StereoDepthPerception::GyLeft_GPU = nullptr;
+float *StereoDepthPerception::GxRight_GPU = nullptr;
+float *StereoDepthPerception::GyRight_GPU = nullptr;
 
-float* StereoDepthPerception::PixelCostLeft_GPU = nullptr;
-float* StereoDepthPerception::PixelCostRight_GPU = nullptr;
+float *StereoDepthPerception::PixelCostLeft_GPU = nullptr;
+float *StereoDepthPerception::PixelCostRight_GPU = nullptr;
 
-float* StereoDepthPerception::TurboPixelLeft_GPU = nullptr;
-float* StereoDepthPerception::TurboPixelRight_GPU = nullptr;
+float *StereoDepthPerception::TurboPixelLeft_GPU = nullptr;
+float *StereoDepthPerception::TurboPixelRight_GPU = nullptr;
 
-float* StereoDepthPerception::CostCoordinatesLeft_GPU = nullptr;
-float* StereoDepthPerception::CostCoordinatesRight_GPU = nullptr;
+float *StereoDepthPerception::CostCoordinatesLeft_GPU = nullptr;
+float *StereoDepthPerception::CostCoordinatesRight_GPU = nullptr;
 
-float* StereoDepthPerception::CostSegmentsLeft_GPU = nullptr;
-float* StereoDepthPerception::CostSegmentsRight_GPU = nullptr;
+float *StereoDepthPerception::CostSegmentsLeft_GPU = nullptr;
+float *StereoDepthPerception::CostSegmentsRight_GPU = nullptr;
 
-float* StereoDepthPerception::GraphLeft_GPU = nullptr;
-float* StereoDepthPerception::GraphRight_GPU = nullptr;
-float* StereoDepthPerception::IntensitiesLeft_GPU = nullptr;
-float* StereoDepthPerception::IntensitiesRight_GPU = nullptr;
-float* StereoDepthPerception::NeighborhoodsLeft_GPU = nullptr;
-float* StereoDepthPerception::NeighborhoodsRight_GPU = nullptr;
+float *StereoDepthPerception::GraphLeft_GPU = nullptr;
+float *StereoDepthPerception::GraphRight_GPU = nullptr;
+float *StereoDepthPerception::IntensitiesLeft_GPU = nullptr;
+float *StereoDepthPerception::IntensitiesRight_GPU = nullptr;
+float *StereoDepthPerception::NeighborhoodsLeft_GPU = nullptr;
+float *StereoDepthPerception::NeighborhoodsRight_GPU = nullptr;
 
-float* StereoDepthPerception::IterativeCostLeft_GPU = nullptr;
-float* StereoDepthPerception::IterativeCostRight_GPU = nullptr;
-float* StereoDepthPerception::InitialCostLeft_GPU = nullptr;
-float* StereoDepthPerception::InitialCostRight_GPU = nullptr;
+float *StereoDepthPerception::IterativeCostLeft_GPU = nullptr;
+float *StereoDepthPerception::IterativeCostRight_GPU = nullptr;
+float *StereoDepthPerception::InitialCostLeft_GPU = nullptr;
+float *StereoDepthPerception::InitialCostRight_GPU = nullptr;
 
-float* StereoDepthPerception::DisparityLeft_GPU = nullptr;
-float* StereoDepthPerception::DisparityRight_GPU = nullptr;
-float* StereoDepthPerception::Disparity_GPU = nullptr;
-float* StereoDepthPerception::Depth_GPU = nullptr;
+float *StereoDepthPerception::DisparityLeft_GPU = nullptr;
+float *StereoDepthPerception::DisparityRight_GPU = nullptr;
+float *StereoDepthPerception::Disparity_GPU = nullptr;
+float *StereoDepthPerception::Depth_GPU = nullptr;
 
 int StereoDepthPerception::Width = 0;
 int StereoDepthPerception::Height = 0;
@@ -54,8 +54,8 @@ dim3 StereoDepthPerception::BlockSize, StereoDepthPerception::blockSize;
 dim3 StereoDepthPerception::GridSize, StereoDepthPerception::gridSize;
 
 VOID SaveMAT2TXT(
-	CONST IN cv::Mat& image,
-	CONST IN std::string& str)
+	CONST IN cv::Mat &image,
+	CONST IN std::string &str)
 {
 	std::ofstream file;
 	std::stringstream name;
@@ -77,28 +77,35 @@ VOID SaveMAT2TXT(
 }
 
 VOID StereoDepthPerception::CUDA2MAT(
-	CONST IN float* image_GPU,
-	CONST IN int& width,
-	CONST IN int& height,
-	OUT cv::Mat& image,
+	CONST IN float *image_GPU,
+	CONST IN int &width,
+	CONST IN int &height,
+	OUT cv::Mat &image,
 	bool disp)
 {
 	size_t dataLength = SIZE_PTR(float, width, height);
 
-	float* image_CPU = new float[dataLength];
+	float *image_CPU = new float[dataLength];
 	cudaMemcpy(image_CPU, image_GPU, dataLength, cudaMemcpyDeviceToHost);
 	image = cv::Mat(height, width, CV_32F);
 	std::memcpy(image.data, image_CPU, dataLength);
 
-	if (disp)image.convertTo(image, CV_8UC1);
+	if (disp)
+		image.convertTo(image, CV_8UC1);
 
-	delete[]image_CPU;
+	delete[] image_CPU;
 }
 
 VOID StereoDepthPerception::MAT2CUDA(
-	CONST IN cv::Mat& image,
-	OUT float** image_GPU)
+	CONST IN cv::Mat &image,
+	OUT float **image_GPU)
 {
+	if (!image_GPU || !(*image_GPU))
+	{
+		std::cerr << "No GPU Ptr" << std::endl;
+		return;
+	}
+
 	size_t matDataLength = SIZE_PTR(float, image.rows, image.cols) * image.channels();
 
 	cudaMalloc(image_GPU, matDataLength);
@@ -106,8 +113,8 @@ VOID StereoDepthPerception::MAT2CUDA(
 }
 
 VOID StereoDepthPerception::CropImages(
-	CONST IN cv::Mat& leftImage,
-	CONST IN cv::Mat& rightImage)
+	CONST IN cv::Mat &leftImage,
+	CONST IN cv::Mat &rightImage)
 {
 	cv::Mat leftCroppedImage;
 	leftImage(cv::Rect(0, 0, Width, Height)).copyTo(leftCroppedImage);
@@ -116,10 +123,18 @@ VOID StereoDepthPerception::CropImages(
 
 	MAT2CUDA(leftCroppedImage, &LeftImage_GPU);
 	MAT2CUDA(rightCroppedImage, &RightImage_GPU);
+
+	std::cout << "CropImages" << std::endl;
 }
 
 VOID StereoDepthPerception::ConvertRGB2GrayScale(CONST IN int channels)
 {
+	if (!GrayLeftImage_GPU || !GrayRightImage_GPU)
+	{
+		std::cerr << "No GPU Ptr" << std::endl;
+		return;
+	}
+
 	CUDA::ConvertRGB2GrayScale(
 		GridSize, BlockSize, Width, Height, Lenght,
 		channels, LeftImage_GPU, GrayLeftImage_GPU);
@@ -128,6 +143,14 @@ VOID StereoDepthPerception::ConvertRGB2GrayScale(CONST IN int channels)
 		channels, RightImage_GPU, GrayRightImage_GPU);
 
 	cudaDeviceSynchronize();
+
+	cv::Mat gl, gr;
+	CUDA2MAT(GrayLeftImage_GPU, Width, Height, gl, true);
+	CUDA2MAT(GrayRightImage_GPU, Width, Height, gr, true);
+	cv::imshow("GrayScale L", gl);
+	cv::imshow("GrayScale R", gr);
+
+	std::cout << "ConvertRGB2GrayScale" << std::endl;
 }
 
 VOID StereoDepthPerception::GradientOperations()
@@ -358,9 +381,7 @@ VOID StereoDepthPerception::SetPenaltyMatrix()
 		for (j = 0; j < MaxDisparity; ++j)
 		{
 			diff = abs(i - j);
-			penalty.at<float>(i, j) = diff < TAU ?
-				(diff * diff / PSI / PSI) :
-				(TAU * TAU / PSI / PSI);
+			penalty.at<float>(i, j) = diff < TAU ? (diff * diff / PSI / PSI) : (TAU * TAU / PSI / PSI);
 		}
 	}
 
@@ -433,40 +454,46 @@ VOID StereoDepthPerception::SetMemoryAllocations()
 	cudaMalloc(&Depth_GPU, DataLenght);
 }
 
-VOID StereoDepthPerception::GetDepthImage(OUT cv::Mat& depthMap)
+VOID StereoDepthPerception::GetDepthImage(OUT cv::Mat &depthMap)
 {
-	CUDA2MAT(Depth_GPU, Width, Height, depthMap, true);
+	CUDA2MAT(GrayLeftImage_GPU, Width, Height, depthMap, true);
 
 	double minVal;
 	double maxVal;
 	cv::minMaxLoc(depthMap, &minVal, &maxVal);
 
 	std::cout << "**************************" << ENDL
-		<< "Min Val Depth : " << minVal << ENDL
-		<< "Max Val Depth : " << maxVal << ENDL;
+			  << "Min Val Depth : " << minVal << ENDL
+			  << "Max Val Depth : " << maxVal << ENDL;
 
 	depthMap = (depthMap / maxVal) * 255;
 }
 
 VOID StereoDepthPerception::Compute(
-	CONST IN cv::Mat& leftImage,
-	CONST IN cv::Mat& rightImage)
+	CONST IN cv::Mat &leftImage,
+	CONST IN cv::Mat &rightImage)
 {
+	if (leftImage.empty() || rightImage.empty())
+	{
+		std::cerr << "ERROR READING IMAGES" << std::endl;
+		return;
+	}
+
 	CropImages(leftImage, rightImage);
 	ConvertRGB2GrayScale(leftImage.channels());
-	GradientOperations();
-	GradientMatching();
-	TurboPixelGeneration();
-	TurboPixelClustering();
-	TurboPixelExpansion();
-	ComputeCostCoordinates();
-	ComputeCostSegments();
-	ComputeCostNormalization();
-	GraphConstruction();
-	NeighborhoodsConstruction();
-	RandomWalkWithRestart();
-	GetDisparityMap();
-	GetDepthMap();
+	//   GradientOperations();
+	//   GradientMatching();
+	//   TurboPixelGeneration();
+	//   TurboPixelClustering();
+	//   TurboPixelExpansion();
+	//   ComputeCostCoordinates();
+	//   ComputeCostSegments();
+	//   ComputeCostNormalization();
+	//   GraphConstruction();
+	//   NeighborhoodsConstruction();
+	//   RandomWalkWithRestart();
+	//   GetDisparityMap();
+	//   GetDepthMap();
 }
 
 VOID StereoDepthPerception::Setup(
@@ -492,4 +519,6 @@ VOID StereoDepthPerception::Setup(
 
 	SetMemoryAllocations();
 	SetPenaltyMatrix();
+
+	std::cout << "Input images size: " << size << std::endl;
 }

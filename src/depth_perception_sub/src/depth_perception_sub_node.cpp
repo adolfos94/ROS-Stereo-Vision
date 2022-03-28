@@ -56,5 +56,7 @@ int main(int argc, char **argv)
     image_transport::Subscriber sub_left_camera = it.subscribe("camera/left_image", 1, imageLeftCallback);
     image_transport::Subscriber sub_right_camera = it.subscribe("camera/right_image", 1, imageRightCallback);
 
+    StereoDepthPerceptionLib::Setup(cv::Size(640, 480));
+
     ros::spin();
 }

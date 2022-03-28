@@ -1,6 +1,6 @@
 ADD_LIBRARY(
 	StereoDepthPerceptionLib
-	SHARED
+	STATIC
 	"plugin.cpp"
 	"src/Stereo Depth Perception.cpp"
 	"src/CUDA/DeviceInfo.cu"

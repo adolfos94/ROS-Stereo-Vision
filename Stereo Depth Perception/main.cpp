@@ -20,7 +20,7 @@ VOID DP_Process(
 
 int main()
 {
-	WebCam webCam = WebCam(std::string("../resource/Dataset/"), true);
+	WebCam webCam = WebCam(std::string("../../Stereo Calibration/res/"), true);
 
 	StereoDepthPerceptionLib::Setup(webCam.GetWebCamResolution());
 

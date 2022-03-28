@@ -1,8 +1,8 @@
 #include "WebCam.h"
 
-bool  WebCam::LoadDepthBufferFromDataset(
-	CONST IN std::string& path,
-	OUT cv::Mat& depthBuffer)
+bool WebCam::LoadDepthBufferFromDataset(
+	CONST IN std::string &path,
+	OUT cv::Mat &depthBuffer)
 {
 	depthBuffer = cv::Mat(WebCamImage.size(), CV_32F);
 
@@ -32,8 +32,8 @@ bool  WebCam::LoadDepthBufferFromDataset(
 }
 
 bool WebCam::LoadLiDARBufferFromDataset(
-	CONST IN std::string& path,
-	OUT cv::Mat& LiDARImage)
+	CONST IN std::string &path,
+	OUT cv::Mat &LiDARImage)
 {
 	LiDARImage = cv::Mat();
 
@@ -63,12 +63,12 @@ bool WebCam::LoadLiDARBufferFromDataset(
 }
 
 VOID WebCam::OnFrameAcquired(
-	IN VOID(*process)(CONST IN cv::Mat&, CONST IN cv::Mat&, CONST IN cv::Mat&, OUT void*),
-	OUT void* algorithm)
+	IN VOID (*process)(CONST IN cv::Mat &, CONST IN cv::Mat &, CONST IN cv::Mat &, OUT void *),
+	OUT void *algorithm)
 {
 	int i = 0;
 
-	while (// Extraction.
+	while ( // Extraction.
 		colorVideoCapture.read(WebCamImage) &&
 		LoadDepthBufferFromDataset(std::to_string(++i), DepthImage) &&
 		LoadLiDARBufferFromDataset(std::to_string(i), LiDARImage))
@@ -81,7 +81,7 @@ VOID WebCam::OnFrameAcquired(
 
 #if VISUAL_DEBUG
 		WebCamImage.convertTo(WebCamImage, CV_8UC1);
-		cv::putText(WebCamImage, "FPS: " + std::to_string(1 / TIME_RESULT), { 10,15 }, 1, 1, CV_RGB(255, 0, 0));
+		cv::putText(WebCamImage, "FPS: " + std::to_string(1 / TIME_RESULT), {10, 15}, 1, 1, CV_RGB(255, 0, 0));
 
 		cv::imshow("WebCam", WebCamImage);
 		cv::waitKey(1);
@@ -93,10 +93,10 @@ VOID WebCam::OnFrameAcquired(
 }
 
 VOID WebCam::OnFrameAcquired(
-	IN VOID(*process)(CONST IN cv::Mat&, CONST IN cv::Mat&, OUT void*),
-	OUT void* algorithm)
+	IN VOID (*process)(CONST IN cv::Mat &, CONST IN cv::Mat &, OUT void *),
+	OUT void *algorithm)
 {
-	while (// Extraction.
+	while ( // Extraction.
 		leftVideoCapture.read(LeftImage) && rightVideoCapture.read(RightImage))
 	{
 		auto TIME_START;
@@ -109,14 +109,14 @@ VOID WebCam::OnFrameAcquired(
 
 #if VISUAL_DEBUG
 		LeftImage.convertTo(LeftImage, CV_8UC1);
-		cv::putText(LeftImage, "FPS: " + std::to_string(1 / TIME_RESULT), { 10,15 }, 1, 1, CV_RGB(255, 0, 0));
+		cv::putText(LeftImage, "FPS: " + std::to_string(1 / TIME_RESULT), {10, 15}, 1, 1, CV_RGB(255, 0, 0));
 
 		RightImage.convertTo(RightImage, CV_8UC1);
-		cv::putText(RightImage, "FPS: " + std::to_string(1 / TIME_RESULT), { 10,15 }, 1, 1, CV_RGB(255, 0, 0));
+		cv::putText(RightImage, "FPS: " + std::to_string(1 / TIME_RESULT), {10, 15}, 1, 1, CV_RGB(255, 0, 0));
 
 		cv::imshow("Left WebCam", LeftImage);
 		cv::imshow("Right WebCam", RightImage);
-		cv::waitKey(0);
+		cv::waitKey(1);
 #else
 		COUT << REMOVE << "FPS: " << std::to_string(1 / TIME_RESULT);
 
@@ -124,7 +124,7 @@ VOID WebCam::OnFrameAcquired(
 	}
 }
 
-WebCam::WebCam(CONST IN std::string& _datasetPath, bool stereo_cam)
+WebCam::WebCam(CONST IN std::string &_datasetPath, bool stereo_cam)
 {
 	datasetPath = _datasetPath;
 
@@ -141,8 +141,8 @@ WebCam::WebCam(CONST IN std::string& _datasetPath, bool stereo_cam)
 	}
 	else
 	{
-		leftVideoCapture = cv::VideoCapture(datasetPath + "stereo/Left/rgb000001.png");
-		rightVideoCapture = cv::VideoCapture(datasetPath + "stereo/Right/rgb000001.png");
+		leftVideoCapture = cv::VideoCapture(datasetPath + "left_images/01.png", cv::CAP_IMAGES);
+		rightVideoCapture = cv::VideoCapture(datasetPath + "right_images/01.png", cv::CAP_IMAGES);
 
 		if (!leftVideoCapture.isOpened() || !rightVideoCapture.isOpened())
 			COUT << "Error opening stereo dataset" << ENDL;
@@ -154,10 +154,10 @@ WebCam::WebCam(CONST IN std::string& _datasetPath, bool stereo_cam)
 	}
 
 	IntrinsicParameters = cv::Mat::zeros(3, 3, CV_32F);
-	IntrinsicParameters.at<float>(0, 0) = 582.10184f; //Fx
-	IntrinsicParameters.at<float>(1, 1) = 582.10184f; //Fx
-	IntrinsicParameters.at<float>(0, 2) = 336.50000f; //Cx
-	IntrinsicParameters.at<float>(1, 2) = 188.50000f; //Cy
+	IntrinsicParameters.at<float>(0, 0) = 582.10184f; // Fx
+	IntrinsicParameters.at<float>(1, 1) = 582.10184f; // Fx
+	IntrinsicParameters.at<float>(0, 2) = 336.50000f; // Cx
+	IntrinsicParameters.at<float>(1, 2) = 188.50000f; // Cy
 
 	COUT << "WebCam Capturing FPS: " << FPS << ENDL;
 	COUT << "WebCam Resolution: " << resolution << ENDL;
