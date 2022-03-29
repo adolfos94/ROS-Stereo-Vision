@@ -12,8 +12,14 @@ constexpr char STEREO_PARAMS_PATH[] = "./Stereo Calibration/data/stereocalib.yml
 
 int main(int argc, char *argv[])
 {
-    VideoCapture cam0("nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM), width=640, height=480, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv flip-method=0 ! video/x-raw, width=640, height=480, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink", cv::CAP_GSTREAMER);
-    VideoCapture cam1("nvarguscamerasrc sensor-id=1 ! video/x-raw(memory:NVMM), width=640, height=480, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv flip-method=0 ! video/x-raw, width=640, height=480, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink", cv::CAP_GSTREAMER);
+    VideoCapture cam0;
+    VideoCapture cam1;
+
+    cam0 = VideoCapture("./Stereo Calibration/res/left_images/01.png", cv::CAP_IMAGES);
+    cam1 = VideoCapture("./Stereo Calibration/res/right_images/01.png", cv::CAP_IMAGES);
+
+    // cam0 = ("nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM), width=640, height=480, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv flip-method=0 ! video/x-raw, width=640, height=480, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink", cv::CAP_GSTREAMER);
+    // cam1 = ("nvarguscamerasrc sensor-id=1 ! video/x-raw(memory:NVMM), width=640, height=480, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv flip-method=0 ! video/x-raw, width=640, height=480, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink", cv::CAP_GSTREAMER);
 
     if (!cam0.isOpened())
     {
@@ -32,6 +38,7 @@ int main(int argc, char *argv[])
     cout << "Frames per second using cam1 : " << cam1.get(cv::CAP_PROP_FPS) << endl;
 
     // Load Stereo Calibration Parameters
+
     cv::Mat Map1x, Map1y, Map2x, Map2y;
     cv::FileStorage stereodatafs;
     stereodatafs.open(STEREO_PARAMS_PATH, cv::FileStorage::READ);
@@ -40,8 +47,8 @@ int main(int argc, char *argv[])
     stereodatafs["Map2x"] >> Map2x;
     stereodatafs["Map2y"] >> Map2y;
     stereodatafs.release();
-
-    cout << "Using instrinsic params: " << STEREO_PARAMS_PATH << endl;
+    if (argv[1])
+        cout << "Using instrinsic params: " << STEREO_PARAMS_PATH << endl;
 
     // Init the Node Publisher and configure it.
     ros::init(argc, argv, "stereo_image_publisher");

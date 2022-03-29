@@ -19,7 +19,6 @@ void DisplayStereoWebCam(cv::Mat &imageLeft, cv::Mat &imageRight)
     cv::hconcat(imageLeft, imageRight, stereoImage);
 
     cv::imshow("Stereo WebCam", stereoImage);
-    cv::waitKey(30);
 }
 
 void callback(const sensor_msgs::ImageConstPtr &l_image_msg,
@@ -28,15 +27,14 @@ void callback(const sensor_msgs::ImageConstPtr &l_image_msg,
     cv::Mat LeftImage = cv_bridge::toCvShare(l_image_msg, "bgr8")->image;
     cv::Mat RightImage = cv_bridge::toCvShare(r_image_msg, "bgr8")->image;
 
-    DisplayStereoWebCam(LeftImage, RightImage);
-
     cv::Mat depthMap;
 
     StereoDepthPerceptionLib::Compute(LeftImage, RightImage);
     StereoDepthPerceptionLib::GetDepthImage(depthMap);
 
+    DisplayStereoWebCam(LeftImage, RightImage);
     cv::imshow("DephBuffer", depthMap);
-    cv::waitKey(1);
+    cv::waitKey(0);
 }
 
 int main(int argc, char **argv)

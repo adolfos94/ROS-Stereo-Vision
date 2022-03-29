@@ -445,6 +445,7 @@ VOID StereoDepthPerception::GetDepthImage(OUT cv::Mat &depthMap)
 			  << "Max Val Depth : " << maxVal << ENDL;
 
 	depthMap = (depthMap / maxVal) * 255;
+	cv::applyColorMap(depthMap, depthMap, cv::COLORMAP_WINTER);
 }
 
 VOID StereoDepthPerception::Compute(

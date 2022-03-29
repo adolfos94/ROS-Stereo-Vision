@@ -114,8 +114,9 @@ VOID WebCam::OnFrameAcquired(
 		RightImage.convertTo(RightImage, CV_8UC1);
 		cv::putText(RightImage, "FPS: " + std::to_string(1 / TIME_RESULT), {10, 15}, 1, 1, CV_RGB(255, 0, 0));
 
-		cv::imshow("Left WebCam", LeftImage);
-		cv::imshow("Right WebCam", RightImage);
+		cv::Mat StereoImage;
+		cv::hconcat(LeftImage, RightImage, StereoImage);
+		cv::imshow("Stereo WebCam", StereoImage);
 		cv::waitKey(1);
 #else
 		COUT << REMOVE << "FPS: " << std::to_string(1 / TIME_RESULT);
