@@ -100,12 +100,6 @@ VOID StereoDepthPerception::MAT2CUDA(
 	CONST IN cv::Mat &image,
 	OUT float **image_GPU)
 {
-	if (!image_GPU || !(*image_GPU))
-	{
-		std::cerr << "No GPU Ptr" << std::endl;
-		return;
-	}
-
 	size_t matDataLength = SIZE_PTR(float, image.rows, image.cols) * image.channels();
 
 	cudaMalloc(image_GPU, matDataLength);
@@ -123,18 +117,10 @@ VOID StereoDepthPerception::CropImages(
 
 	MAT2CUDA(leftCroppedImage, &LeftImage_GPU);
 	MAT2CUDA(rightCroppedImage, &RightImage_GPU);
-
-	std::cout << "CropImages" << std::endl;
 }
 
 VOID StereoDepthPerception::ConvertRGB2GrayScale(CONST IN int channels)
 {
-	if (!GrayLeftImage_GPU || !GrayRightImage_GPU)
-	{
-		std::cerr << "No GPU Ptr" << std::endl;
-		return;
-	}
-
 	CUDA::ConvertRGB2GrayScale(
 		GridSize, BlockSize, Width, Height, Lenght,
 		channels, LeftImage_GPU, GrayLeftImage_GPU);
@@ -143,14 +129,6 @@ VOID StereoDepthPerception::ConvertRGB2GrayScale(CONST IN int channels)
 		channels, RightImage_GPU, GrayRightImage_GPU);
 
 	cudaDeviceSynchronize();
-
-	cv::Mat gl, gr;
-	CUDA2MAT(GrayLeftImage_GPU, Width, Height, gl, true);
-	CUDA2MAT(GrayRightImage_GPU, Width, Height, gr, true);
-	cv::imshow("GrayScale L", gl);
-	cv::imshow("GrayScale R", gr);
-
-	std::cout << "ConvertRGB2GrayScale" << std::endl;
 }
 
 VOID StereoDepthPerception::GradientOperations()
@@ -456,7 +434,7 @@ VOID StereoDepthPerception::SetMemoryAllocations()
 
 VOID StereoDepthPerception::GetDepthImage(OUT cv::Mat &depthMap)
 {
-	CUDA2MAT(GrayLeftImage_GPU, Width, Height, depthMap, true);
+	CUDA2MAT(Depth_GPU, Width, Height, depthMap, true);
 
 	double minVal;
 	double maxVal;
@@ -481,19 +459,19 @@ VOID StereoDepthPerception::Compute(
 
 	CropImages(leftImage, rightImage);
 	ConvertRGB2GrayScale(leftImage.channels());
-	//   GradientOperations();
-	//   GradientMatching();
-	//   TurboPixelGeneration();
-	//   TurboPixelClustering();
-	//   TurboPixelExpansion();
-	//   ComputeCostCoordinates();
-	//   ComputeCostSegments();
-	//   ComputeCostNormalization();
-	//   GraphConstruction();
-	//   NeighborhoodsConstruction();
-	//   RandomWalkWithRestart();
-	//   GetDisparityMap();
-	//   GetDepthMap();
+	GradientOperations();
+	GradientMatching();
+	TurboPixelGeneration();
+	TurboPixelClustering();
+	TurboPixelExpansion();
+	ComputeCostCoordinates();
+	ComputeCostSegments();
+	ComputeCostNormalization();
+	GraphConstruction();
+	NeighborhoodsConstruction();
+	RandomWalkWithRestart();
+	GetDisparityMap();
+	GetDepthMap();
 }
 
 VOID StereoDepthPerception::Setup(

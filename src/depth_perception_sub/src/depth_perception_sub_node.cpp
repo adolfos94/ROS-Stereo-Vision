@@ -1,50 +1,42 @@
 #include <ros/ros.h>
+#include <sensor_msgs/Image.h>
 #include <image_transport/image_transport.h>
+#include <image_transport/subscriber_filter.h>
+#include <message_filters/sync_policies/approximate_time.h>
+#include <cv_bridge/cv_bridge.h>
+
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <cv_bridge/cv_bridge.h>
+
 #include "libStereoDepthPerceptionLib.h"
 
-cv::Mat LeftImage, RightImage;
+typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, sensor_msgs::Image> ApproximatePolicy;
+typedef message_filters::Synchronizer<ApproximatePolicy> ApproximateSync;
 
-void DisplayWebCam(std::string name, cv::Mat &imageMat)
+void DisplayStereoWebCam(cv::Mat &imageLeft, cv::Mat &imageRight)
 {
-    cv::imshow(name, imageMat);
+    cv::Mat stereoImage;
+    cv::hconcat(imageLeft, imageRight, stereoImage);
+
+    cv::imshow("Stereo WebCam", stereoImage);
     cv::waitKey(30);
 }
 
-void imageLeftCallback(const sensor_msgs::ImageConstPtr &msg)
+void callback(const sensor_msgs::ImageConstPtr &l_image_msg,
+              const sensor_msgs::ImageConstPtr &r_image_msg)
 {
-    try
-    {
-        LeftImage = cv_bridge::toCvShare(msg, "bgr8")->image;
-        DisplayWebCam("Left Image", LeftImage);
-    }
-    catch (cv_bridge::Exception &e)
-    {
-        ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
-    }
-}
+    cv::Mat LeftImage = cv_bridge::toCvShare(l_image_msg, "bgr8")->image;
+    cv::Mat RightImage = cv_bridge::toCvShare(r_image_msg, "bgr8")->image;
 
-void imageRightCallback(const sensor_msgs::ImageConstPtr &msg)
-{
-    try
-    {
-        RightImage = cv_bridge::toCvShare(msg, "bgr8")->image;
-        DisplayWebCam("Right Image", RightImage);
+    DisplayStereoWebCam(LeftImage, RightImage);
 
-        cv::Mat depthMap;
+    cv::Mat depthMap;
 
-        StereoDepthPerceptionLib::Compute(LeftImage, RightImage);
-        StereoDepthPerceptionLib::GetDepthImage(depthMap);
+    StereoDepthPerceptionLib::Compute(LeftImage, RightImage);
+    StereoDepthPerceptionLib::GetDepthImage(depthMap);
 
-        cv::imshow("DephBuffer", depthMap);
-        cv::waitKey(1);
-    }
-    catch (cv_bridge::Exception &e)
-    {
-        ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
-    }
+    cv::imshow("DephBuffer", depthMap);
+    cv::waitKey(1);
 }
 
 int main(int argc, char **argv)
@@ -53,10 +45,16 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
 
     image_transport::ImageTransport it(nh);
-    image_transport::Subscriber sub_left_camera = it.subscribe("camera/left_image", 1, imageLeftCallback);
-    image_transport::Subscriber sub_right_camera = it.subscribe("camera/right_image", 1, imageRightCallback);
+    image_transport::SubscriberFilter left_sub, right_sub;
+    left_sub.subscribe(it, "camera/left_image", 1);
+    right_sub.subscribe(it, "camera/right_image", 1);
 
     StereoDepthPerceptionLib::Setup(cv::Size(640, 480));
+
+    boost::shared_ptr<ApproximateSync> approximate_sync;
+
+    approximate_sync.reset(new ApproximateSync(ApproximatePolicy(1), left_sub, right_sub));
+    approximate_sync->registerCallback(boost::bind(callback, _1, _2));
 
     ros::spin();
 }
