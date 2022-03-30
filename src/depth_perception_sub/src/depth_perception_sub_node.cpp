@@ -26,15 +26,14 @@ void callback(const sensor_msgs::ImageConstPtr &l_image_msg,
 {
     cv::Mat LeftImage = cv_bridge::toCvShare(l_image_msg, "bgr8")->image;
     cv::Mat RightImage = cv_bridge::toCvShare(r_image_msg, "bgr8")->image;
-
-    cv::Mat depthMap;
+    cv::Mat DepthMap;
 
     StereoDepthPerceptionLib::Compute(LeftImage, RightImage);
-    StereoDepthPerceptionLib::GetDepthImage(depthMap);
+    StereoDepthPerceptionLib::GetDepthImage(DepthMap);
 
     DisplayStereoWebCam(LeftImage, RightImage);
-    cv::imshow("DephBuffer", depthMap);
-    cv::waitKey(0);
+    cv::imshow("DephBuffer", DepthMap);
+    cv::waitKey(1);
 }
 
 int main(int argc, char **argv)

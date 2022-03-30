@@ -24,3 +24,9 @@ message(STATUS "CUDA CUBLAS LIBRARIES: ${CUDA_CUBLAS_LIBRARIES}")
 
 TARGET_LINK_LIBRARIES(StereoDepthPerception ${OpenCV_LIBS}) 
 TARGET_LINK_LIBRARIES(StereoDepthPerception "StereoDepthPerceptionLib" ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES})
+
+set(EXTERNAL_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/../src/depth_perception_sub/libraries/StereoDepthPerceptionLib.so")
+add_custom_command(TARGET StereoDepthPerception POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:StereoDepthPerceptionLib> ${EXTERNAL_LIBS}
+    COMMENT "Created ${EXTERNAL_LIBS}"
+)

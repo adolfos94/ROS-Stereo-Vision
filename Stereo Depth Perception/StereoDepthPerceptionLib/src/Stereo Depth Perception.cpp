@@ -102,7 +102,9 @@ VOID StereoDepthPerception::MAT2CUDA(
 {
 	size_t matDataLength = SIZE_PTR(float, image.rows, image.cols) * image.channels();
 
-	cudaMalloc(image_GPU, matDataLength);
+	if (!(*image_GPU))
+		cudaMalloc(image_GPU, matDataLength);
+
 	cudaMemcpy(*image_GPU, image.data, matDataLength, cudaMemcpyHostToDevice);
 }
 
@@ -457,8 +459,11 @@ VOID StereoDepthPerception::Compute(
 		std::cerr << "ERROR READING IMAGES" << std::endl;
 		return;
 	}
+	cv::Mat LeftImage, RightImage;
+	leftImage.convertTo(LeftImage, CV_32F);
+	rightImage.convertTo(RightImage, CV_32F);
 
-	CropImages(leftImage, rightImage);
+	CropImages(LeftImage, RightImage);
 	ConvertRGB2GrayScale(leftImage.channels());
 	GradientOperations();
 	GradientMatching();
