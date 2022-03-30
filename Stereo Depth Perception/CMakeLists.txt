@@ -11,12 +11,11 @@ FIND_PACKAGE(CUDA REQUIRED)
 INCLUDE_DIRECTORIES( ${CUDA_INCLUDE_DIRS})
 
 # ADD LIBRARY
-ADD_SUBDIRECTORY(StereoDepthPerceptionLib)
+ADD_SUBDIRECTORY("lib")
 
 # Add source to this project's executable.
 ADD_EXECUTABLE(StereoDepthPerception 
 	"main.cpp"
-    "source/WebCam/WebCam.cpp"
 )
 
 message(STATUS "CUDA LIBRARIES: ${CUDA_LIBRARIES}")
@@ -25,6 +24,7 @@ message(STATUS "CUDA CUBLAS LIBRARIES: ${CUDA_CUBLAS_LIBRARIES}")
 TARGET_LINK_LIBRARIES(StereoDepthPerception ${OpenCV_LIBS}) 
 TARGET_LINK_LIBRARIES(StereoDepthPerception "StereoDepthPerceptionLib" ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES})
 
+# Post-build event
 
 if(UNIX AND NOT APPLE)
     # Linux, BSD, Solaris, Minix

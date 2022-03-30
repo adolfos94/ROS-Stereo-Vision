@@ -32,7 +32,7 @@ void callback(const sensor_msgs::ImageConstPtr &l_image_msg,
     StereoDepthPerceptionLib::GetDepthImage(DepthMap);
 
     DisplayStereoWebCam(LeftImage, RightImage);
-    cv::imshow("DephBuffer", DepthMap);
+    cv::imshow("Depht Buffer", DepthMap);
     cv::waitKey(1);
 }
 
