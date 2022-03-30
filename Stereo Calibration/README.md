@@ -29,16 +29,16 @@ C++ codes for stereo camera calibration and rectification. The data contained in
 
 ## Run
 
-### Store Calibration Images
+### 1. Store Calibration Images.
 
-- Run GetCalibrationImages program. It saves automatically all the stereo images in live mode.
+- Run GetCalibrationImages program. If the chessboard has been detected properly in both images it asks automatically if the user wants to save the images.
 
 ```command
     adolfo in ROS-Stereo-Camera/Stereo Calibration/build
     ./GetCalibrationImages
 ```
 
-### Extract Calibration Parameters.
+### 2. Extract Calibration Parameters.
 
 - Run GetCalibrationMatrices program. It saves automatically all the stereo images params. The file it is saved as **"stereocalib.yml"**.
 
@@ -49,7 +49,7 @@ C++ codes for stereo camera calibration and rectification. The data contained in
 
 -
 
-### Display Rectified Images.
+### 3. Display Rectified Images.
 
 - Run GetRectifiedImages program. It displays the stereo rectified images using **"stereocalib.yml"**.\
   <span style="color:orange"> If an argument is passed it will use the default images saved.</span>

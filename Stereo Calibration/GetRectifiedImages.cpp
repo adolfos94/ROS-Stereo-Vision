@@ -1,15 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <string>
-#include <opencv2/opencv.hpp>
-#include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <iostream>
-
-using namespace cv;
-using namespace std;
+#include "pch.h"
 
 int main(int argc, char *argv[])
 {

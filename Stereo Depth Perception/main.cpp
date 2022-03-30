@@ -44,7 +44,7 @@ int main()
 	// CUDA
 	StereoDepthPerceptionLib::Setup(cv::Size(cam0.get(cv::CAP_PROP_FRAME_WIDTH), cam0.get(cv::CAP_PROP_FRAME_HEIGHT)));
 
-	cv::Mat LeftImage, RightImage, DepthImage, DisparityImage;
+	cv::Mat LeftImage, RightImage, StereoImage, DepthImage, DisparityImage;
 	while (cam0.read(LeftImage) && cam1.read(RightImage))
 	{
 		auto TIME_START;
@@ -53,7 +53,6 @@ int main()
 
 		OCV_Process(LeftImage, RightImage, DisparityImage);
 
-		cv::Mat StereoImage;
 		cv::hconcat(LeftImage, RightImage, StereoImage);
 		cv::putText(StereoImage, "FPS: " + std::to_string(1 / TIME_RESULT), {10, 15}, 1, 1, CV_RGB(255, 0, 0));
 		cv::imshow("Stereo WebCam", StereoImage);

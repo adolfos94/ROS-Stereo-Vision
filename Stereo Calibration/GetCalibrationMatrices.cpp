@@ -1,19 +1,7 @@
-#include <opencv2/opencv.hpp>
-#include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <stdio.h>
-#include <iostream>
+#include "pch.h"
 
-// Defining the dimensions of checkerboard
-constexpr int BOARD_WIDTH = 9;
-constexpr int BOARD_HEIGHT = 7;
-constexpr float SQUARE_SIZE = 20.00f; // mm
-
-cv::Size m_board_size = cv::Size(BOARD_WIDTH, BOARD_HEIGHT);
 std::vector<std::vector<cv::Point2f>> m_imagePointsLeft, m_imagePointsRight;
 std::vector<std::vector<cv::Point3f>> m_ObjectPoints;
-std::vector<cv::Point2f> m_cornersLeft, m_cornersRight;
 std::vector<cv::Point3f> m_obj;
 
 cv::Mat CM1 = cv::Mat(3, 3, CV_64FC1);
@@ -43,14 +31,15 @@ void ExtractChessboardCorners(cv::Mat &imgLeft, cv::Mat &imgRight, int i)
 {
     bool foundLeft = false, foundRight = false;
     cv::Mat grayLeft, grayRight;
+    std::vector<cv::Point2f> cornersLeft, cornersRight;
 
     cv::cvtColor(imgLeft, grayLeft, cv::COLOR_BGR2GRAY);
     cv::cvtColor(imgRight, grayRight, cv::COLOR_BGR2GRAY);
 
     // Find Chesscorners
-    foundLeft = cv::findChessboardCorners(imgLeft, m_board_size, m_cornersLeft,
+    foundLeft = cv::findChessboardCorners(imgLeft, BOARD_SIZE, cornersLeft,
                                           cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_FILTER_QUADS);
-    foundRight = cv::findChessboardCorners(imgRight, m_board_size, m_cornersRight,
+    foundRight = cv::findChessboardCorners(imgRight, BOARD_SIZE, cornersRight,
                                            cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_FILTER_QUADS);
 
     if (!foundLeft || !foundRight)
@@ -59,17 +48,17 @@ void ExtractChessboardCorners(cv::Mat &imgLeft, cv::Mat &imgRight, int i)
         return;
     }
 
-    cv::cornerSubPix(grayLeft, m_cornersLeft, cv::Size(5, 5), cv::Size(-1, -1),
+    cv::cornerSubPix(grayLeft, cornersLeft, cv::Size(5, 5), cv::Size(-1, -1),
                      cv::TermCriteria(cv::TermCriteria::EPS | cv::TermCriteria::MAX_ITER, 30, 0.1));
-    cv::cornerSubPix(grayRight, m_cornersRight, cv::Size(5, 5), cv::Size(-1, -1),
+    cv::cornerSubPix(grayRight, cornersRight, cv::Size(5, 5), cv::Size(-1, -1),
                      cv::TermCriteria(cv::TermCriteria::EPS | cv::TermCriteria::MAX_ITER, 30, 0.1));
 
-    cv::drawChessboardCorners(imgLeft, m_board_size, m_cornersLeft, foundLeft);
+    cv::drawChessboardCorners(imgLeft, BOARD_SIZE, cornersLeft, foundLeft);
 
-    cv::drawChessboardCorners(imgRight, m_board_size, m_cornersRight, foundRight);
+    cv::drawChessboardCorners(imgRight, BOARD_SIZE, cornersRight, foundRight);
 
-    m_imagePointsLeft.push_back(m_cornersLeft);
-    m_imagePointsRight.push_back(m_cornersRight);
+    m_imagePointsLeft.push_back(cornersLeft);
+    m_imagePointsRight.push_back(cornersRight);
     m_ObjectPoints.push_back(m_obj);
 
     std::cout << "Image #: " << i << ". Found corners!" << std::endl;
