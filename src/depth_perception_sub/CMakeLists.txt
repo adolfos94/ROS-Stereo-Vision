@@ -160,7 +160,7 @@ message(STATUS "EXTERNAL LIBS: ${EXTERNAL_LIBS}")
 target_link_libraries(${PROJECT_NAME}_node
  ${catkin_LIBRARIES}
  ${OpenCV_LIBRARIES}
- ${EXTERNAL_LIBS}/libStereoDepthPerceptionLib.so ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES}
+ ${EXTERNAL_LIBS}/StereoDepthPerceptionLib.so ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES}
 )
 #set_target_properties(${PROJECT_NAME}_node PROPERTIES -lcuda -lcublas)
 #############
