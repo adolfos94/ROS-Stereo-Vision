@@ -4,10 +4,6 @@ bool FindChessboardCorners(cv::Mat &imgLeft, cv::Mat &imgRight)
 {
     bool foundLeft = false, foundRight = false;
     std::vector<cv::Point2f> cornersLeft, cornersRight;
-    cv::Mat grayLeft, grayRight;
-
-    cv::cvtColor(imgLeft, grayLeft, cv::COLOR_BGR2GRAY);
-    cv::cvtColor(imgRight, grayRight, cv::COLOR_BGR2GRAY);
 
     // Find Chesscorners
     foundLeft = cv::findChessboardCorners(imgLeft, BOARD_SIZE, cornersLeft,
@@ -18,14 +14,22 @@ bool FindChessboardCorners(cv::Mat &imgLeft, cv::Mat &imgRight)
     if (!foundLeft || !foundRight)
         return false;
 
+    cv::Mat grayLeft, grayRight, cornersImage;
+
+    cv::cvtColor(imgLeft, grayLeft, cv::COLOR_BGR2GRAY);
+    cv::cvtColor(imgRight, grayRight, cv::COLOR_BGR2GRAY);
+
     cv::cornerSubPix(grayLeft, cornersLeft, cv::Size(5, 5), cv::Size(-1, -1),
                      cv::TermCriteria(cv::TermCriteria::EPS | cv::TermCriteria::MAX_ITER, 30, 0.1));
     cv::cornerSubPix(grayRight, cornersRight, cv::Size(5, 5), cv::Size(-1, -1),
                      cv::TermCriteria(cv::TermCriteria::EPS | cv::TermCriteria::MAX_ITER, 30, 0.1));
 
-    cv::drawChessboardCorners(imgLeft, BOARD_SIZE, cornersLeft, foundLeft);
+    cv::drawChessboardCorners(grayLeft, BOARD_SIZE, cornersLeft, foundLeft);
+    cv::drawChessboardCorners(grayRight, BOARD_SIZE, cornersRight, foundRight);
 
-    cv::drawChessboardCorners(imgRight, BOARD_SIZE, cornersRight, foundRight);
+    cv::hconcat(grayLeft, grayRight, cornersImage);
+    cv::imshow("Corners WebCam", cornersImage);
+    cv::waitKey(0);
 
     return true;
 }
@@ -53,13 +57,14 @@ int main()
     Mat LeftImage, RightImage, StereoImage;
     while (cam0.read(LeftImage) && cam1.read(RightImage))
     {
+        cv::hconcat(LeftImage, RightImage, StereoImage);
+        cv::imshow("Stereo WebCam", StereoImage);
+
         if (FindChessboardCorners(LeftImage, RightImage))
         {
             cv::imwrite("../left/left" + to_string(count) + ".png", LeftImage);
             cv::imwrite("../right/right" + to_string(count++) + ".png", RightImage);
         }
-	cv::hconcat(LeftImage, RightImage, StereoImage);
-	cv::imshow("Stereo WebCam", StereoImage);
 
         if ((char)waitKey(1) == 27)
             break;

@@ -13,7 +13,7 @@ using namespace std;
 
 // Defining the dimensions of checkerboard
 constexpr int BOARD_WIDTH = 9;
-constexpr int BOARD_HEIGHT = 7;
+constexpr int BOARD_HEIGHT = 6;
 constexpr float SQUARE_SIZE = 20.00f; // mm
 
 cv::Size BOARD_SIZE = cv::Size(BOARD_WIDTH, BOARD_HEIGHT);

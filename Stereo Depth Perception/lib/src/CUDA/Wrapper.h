@@ -2,13 +2,14 @@
 
 #define INVALID_TURBO_PIXEL -1
 
-__constant__ int MaxDisparity = 64;
-__constant__ int TurboPixelSize = 9;
+__constant__ int MaxDisparity = 32;
+__constant__ int TurboPixelSize = 7;
 __constant__ int CostParams = 4;
-__constant__ int Neighborhoods = 100;
+// TODO: Calculate Neighborhoods for the worst case
+__constant__ int Neighborhoods = 1000;
 __constant__ float TAU = 7.0f;
 __constant__ float PSI = 85.0f;
-__constant__ float RestartEpsilon = 0.0015f;
+__constant__ float RestartEpsilon = 0.015f;
 
 namespace CUDA
 {

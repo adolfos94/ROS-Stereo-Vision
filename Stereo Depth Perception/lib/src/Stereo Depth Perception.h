@@ -112,7 +112,7 @@ private:
 
 	static VOID NeighborhoodsConstruction();
 
-	static VOID RandomWalkWithRestart(CONST IN int iterations = 15);
+	static VOID RandomWalkWithRestart(CONST IN int iterations = 5);
 
 	static VOID GetDisparityMap();
 
