@@ -47,26 +47,22 @@ int main()
     cout << "Frames per second using cam1 : " << cam1.get(cv::CAP_PROP_FPS) << endl;
 
     cout << "**** Instructions: **** " << endl;
-    cout << "- Press (space) for save the image when the chessboard is detected!" << endl;
     cout << "- Press (ESC) to exit!" << endl;
 
     int count = 1;
     Mat LeftImage, RightImage, StereoImage;
     while (cam0.read(LeftImage) && cam1.read(RightImage))
     {
-        cv::hconcat(LeftImage, RightImage, StereoImage);
-        cv::imshow("Stereo WebCam", StereoImage);
-
-        if (FindChessboardCorners(LeftImage, StereoImage) && cv::waitKey(0) == 8)
+        if (FindChessboardCorners(LeftImage, RightImage))
         {
             cv::imwrite("../left/left" + to_string(count) + ".png", LeftImage);
-            cv::imwrite("../right/right" + to_string(count) + ".png", StereoImage);
+            cv::imwrite("../right/right" + to_string(count++) + ".png", RightImage);
         }
+	cv::hconcat(LeftImage, RightImage, StereoImage);
+	cv::imshow("Stereo WebCam", StereoImage);
 
         if ((char)waitKey(1) == 27)
             break;
-
-        count++;
     }
 
     return 0;
