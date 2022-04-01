@@ -1,18 +1,22 @@
-# ROS Stereo Vision
-
-Cameras provide image data to the robot that can be used for object identification, tracking and manipulation tasks. This is a ROS Package for Jetson CSI Stereo Camera for Computer Vision Tasks.
-
-### This package contains:
-
-- **Stereo Camera Publisher:** Obtains left and right rectified images from **IMX219-83 Stereo Camera**.
-- **Stereo Camera Suscriber:** Displays the images using OpenCV.
-- **Stereo Depth Suscriber:** Compute depth based on stereo images.
-
 # Stereo Vision
 
-## [Stereo Rectification](/Stereo%20Calibration/)
+Computer stereo vision is the extraction of 3D information from digital images that can be used for object identification, tracking and manipulation tasks.
 
-## [Stereo Depth Perception - CUDA](/Stereo%20Depth%20Perception/)
+## Modules
+
+### [Stereo Rectification](/Stereo%20Calibration/)
+
+### [Stereo Depth Perception - CUDA](/Stereo%20Depth%20Perception/)
+
+# ROS Stereo Vision
+
+This is a ROS Package for Jetson CSI Stereo Camera for Computer Vision Tasks.
+
+### This package contains the nodes:
+
+- **src/stereo_camera_pub:** Obtains left and right rectified images from **IMX219-83 Stereo Camera**.
+- **src/stereo_camera_sub:** Displays the images using OpenCV.
+- **src/depth_perception_sub:** Compute depth based on stereo images.
 
 # Hardware Stereo Module
 
