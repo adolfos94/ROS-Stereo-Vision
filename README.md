@@ -6,9 +6,13 @@ Cameras provide image data to the robot that can be used for object identificati
 
 - **Stereo Camera Publisher:** Obtains left and right rectified images from **IMX219-83 Stereo Camera**.
 - **Stereo Camera Suscriber:** Displays the images using OpenCV.
-- **Stereo Camera Rectification:** Calibrate your stereo camera.
-- **Stereo Depth Perception:** 
-- **Obstacle Avoidance:**
+- **Stereo Depth Suscriber:** Compute depth based on stereo images.
+
+# Stereo Vision
+
+## [Stereo Rectification](/Stereo%20Calibration/)
+
+## [Stereo Depth Perception - CUDA](/Stereo%20Depth%20Perception/)
 
 # Hardware Stereo Module
 
@@ -149,10 +153,3 @@ rosrun stereo_camera_pub stereo_camera_pub_node
 $ adolfo in ROS-Stereo-Camera at jetson-nano
 rosrun stereo_camera_sub stereo_camera_sub_node
 ```
-
-![Example Stereo Camera](/res/stereo_example_rect.png "Example Stereo Camera")
-
-# Modules
-
-## [Stereo Rectification](/Stereo%20Calibration/)
-## [Stereo Depth Perception](/Stereo%20Depth%20Perception/)
