@@ -8,7 +8,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include "libStereoDepthPerceptionLib.h"
+#include "StereoDepthPerceptionLib.h"
 
 typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, sensor_msgs::Image> ApproximatePolicy;
 typedef message_filters::Synchronizer<ApproximatePolicy> ApproximateSync;
