@@ -78,7 +78,9 @@ private:
 		CONST IN cv::Mat &image,
 		OUT float **image_GPU);
 
-	static VOID SetMemoryAllocations();
+	static VOID SetMalloc();
+
+	static VOID SetMemset();
 
 	static VOID SetPenaltyMatrix();
 
@@ -112,7 +114,7 @@ private:
 
 	static VOID NeighborhoodsConstruction();
 
-	static VOID RandomWalkWithRestart(CONST IN int iterations = 5);
+	static VOID RandomWalkWithRestart(CONST IN int iterations = 15);
 
 	static VOID GetDisparityMap();
 

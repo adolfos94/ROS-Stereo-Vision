@@ -12,6 +12,8 @@ two cameras. This map allows us to calculate the difference in horizontal coordi
 corresponding points of the image, which ultimately will allow us to calculate the distance to the
 object.
 
+![Example Setereo Depth Perception](/res/stereo_depth_perception.png "Setereo Deph Perception")
+
 ## Requirements
 
 ### - OS: Windows or Linux.

@@ -368,8 +368,74 @@ VOID StereoDepthPerception::SetPenaltyMatrix()
 	MAT2CUDA(penalty, &PenaltyMatrix_GPU);
 }
 
+// Memory setter [OUT] GPU
+VOID StereoDepthPerception::SetMemset()
+{
+	// GrayScale Images
+	cudaMemset(GrayLeftImage_GPU, 0, DataLenght);
+	cudaMemset(GrayRightImage_GPU, 0, DataLenght);
+
+	// Gradient Images
+	cudaMemset(GxLeft_GPU, 0, DataLenght);
+	cudaMemset(GyLeft_GPU, 0, DataLenght);
+	cudaMemset(GxRight_GPU, 0, DataLenght);
+	cudaMemset(GyRight_GPU, 0, DataLenght);
+
+	// Pixel Cost Matrices
+	size_t pixelCostDataLenght = DataLenght * MaxDisparity;
+
+	cudaMemset(PixelCostLeft_GPU, 0, pixelCostDataLenght);
+	cudaMemset(PixelCostRight_GPU, 0, pixelCostDataLenght);
+
+	// Turbo Pixel Images
+	cudaMemset(TurboPixelLeft_GPU, 0, DataLenght);
+	cudaMemset(TurboPixelRight_GPU, 0, DataLenght);
+
+	// Cost Params Coordinates Matrices
+	size_t costParamsDataLenght = sizeof(float) * CostParams * NumberGridSegments;
+
+	cudaMemset(CostCoordinatesLeft_GPU, 0, costParamsDataLenght);
+	cudaMemset(CostCoordinatesRight_GPU, 0, costParamsDataLenght);
+
+	// Cost Segments Matrices
+	size_t segmentDataLenght = sizeof(float) * MaxDisparity * NumberGridSegments;
+
+	cudaMemset(CostSegmentsLeft_GPU, 0, segmentDataLenght);
+	cudaMemset(CostSegmentsRight_GPU, 0, segmentDataLenght);
+
+	cudaMemset(IterativeCostLeft_GPU, 0, segmentDataLenght);
+	cudaMemset(IterativeCostRight_GPU, 0, segmentDataLenght);
+	cudaMemset(InitialCostLeft_GPU, 0, segmentDataLenght);
+	cudaMemset(InitialCostRight_GPU, 0, segmentDataLenght);
+
+	// Graph and Intensities Matrices
+	size_t graphDataLenght = sizeof(float) * NumberGridSegments * NumberGridSegments;
+	size_t intensitiesDataLenght = sizeof(float) * 3 * NumberGridSegments;
+
+	cudaMemset(GraphLeft_GPU, 0, graphDataLenght);
+	cudaMemset(GraphRight_GPU, 0, graphDataLenght);
+	cudaMemset(IntensitiesLeft_GPU, 0, intensitiesDataLenght);
+	cudaMemset(IntensitiesRight_GPU, 0, intensitiesDataLenght);
+
+	// Neighborhoods Matrices
+	size_t neighborhoodsDataLenght = sizeof(float) * Neighborhoods * NumberGridSegments;
+
+	cudaMemset(NeighborhoodsLeft_GPU, 0, neighborhoodsDataLenght);
+	cudaMemset(NeighborhoodsRight_GPU, 0, neighborhoodsDataLenght);
+
+	// Disparity Matrices
+	size_t disparityDataLength = SIZE_PTR(float, NumberGridSegments, 1);
+
+	cudaMemset(DisparityLeft_GPU, 0, disparityDataLength);
+	cudaMemset(DisparityRight_GPU, 0, disparityDataLength);
+	cudaMemset(Disparity_GPU, 0, disparityDataLength);
+
+	// Depth Image
+	cudaMemset(Depth_GPU, 0, DataLenght);
+}
+
 // Allocate [OUT] Memory in GPU
-VOID StereoDepthPerception::SetMemoryAllocations()
+VOID StereoDepthPerception::SetMalloc()
 {
 	// GrayScale Images
 	cudaMalloc(&GrayLeftImage_GPU, DataLenght);
@@ -447,7 +513,6 @@ VOID StereoDepthPerception::GetDepthImage(OUT cv::Mat &depthMap)
 			  << "Max Val Depth : " << maxVal << ENDL;
 
 	cv::normalize(depthMap, depthMap, 0, 255, cv::NORM_MINMAX, CV_8U);
-	cv::applyColorMap(depthMap, depthMap, cv::COLORMAP_WINTER);
 }
 
 VOID StereoDepthPerception::Compute(
@@ -462,6 +527,8 @@ VOID StereoDepthPerception::Compute(
 	cv::Mat LeftImage, RightImage;
 	leftImage.convertTo(LeftImage, CV_32F);
 	rightImage.convertTo(RightImage, CV_32F);
+
+	SetMemset();
 
 	CropImages(LeftImage, RightImage);
 	ConvertRGB2GrayScale(leftImage.channels());
@@ -502,7 +569,7 @@ VOID StereoDepthPerception::Setup(
 	blockSize = dim3(MaxThreadsPerBlock, 1, 1);
 	gridSize = dim3(ceil((float)NumberGridSegments / MaxThreadsPerBlock), 1, 1);
 
-	SetMemoryAllocations();
+	SetMalloc();
 	SetPenaltyMatrix();
 
 	std::cout << "Input images size: " << size << std::endl;
