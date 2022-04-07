@@ -29,9 +29,16 @@ TARGET_LINK_LIBRARIES(StereoDepthPerception "StereoDepthPerceptionLib" ${CUDA_LI
 if(UNIX AND NOT APPLE)
     # Linux, BSD, Solaris, Minix
     set(LIB_NAME "StereoDepthPerceptionLib.a")
-    set(EXTERNAL_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/../src/depth_perception_sub/libraries/${LIB_NAME}")
+    set(EXTERNAL_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/release/linux/${LIB_NAME}")
+    add_custom_command(TARGET StereoDepthPerception POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:StereoDepthPerceptionLib> ${EXTERNAL_LIBS}
+        COMMENT "Created ${EXTERNAL_LIBS}")
+elseif(WIN32)
+    set(LIB_NAME "StereoDepthPerceptionLib.lib")
+    set(EXTERNAL_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/release/windows/${LIB_NAME}")
     add_custom_command(TARGET StereoDepthPerception POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:StereoDepthPerceptionLib> ${EXTERNAL_LIBS}
         COMMENT "Created ${EXTERNAL_LIBS}")
 endif()
+
 
