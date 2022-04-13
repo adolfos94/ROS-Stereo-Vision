@@ -6,8 +6,8 @@ __constant__ float TAU = 7.0f;
 __constant__ float PSI = 85.0f;
 __constant__ float RestartEpsilon = 0.015f;
 
-__constant__ int MaxDisparity = 32;
-__constant__ int TurboPixelSize = 15;
+__constant__ int MaxDisparity = 128;
+__constant__ int TurboPixelSize = 11;
 __constant__ int CostParams = 4;
 __constant__ int Neighborhoods = 1000;
 

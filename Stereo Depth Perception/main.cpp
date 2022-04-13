@@ -26,10 +26,10 @@ VOID OCV_Process(
 
 int main()
 {
-	std::string DATASET_PATH = "../res/";
+	std::string DATASET_PATH = "../res/02/";
 	cv::VideoCapture cam0, cam1, cam2;
-	cam0 = cv::VideoCapture(DATASET_PATH + "Image_L/leftImageRGB_Rec1.png", cv::CAP_IMAGES);
-	cam1 = cv::VideoCapture(DATASET_PATH + "Image_R/rightImageRGB_Rec1.png", cv::CAP_IMAGES);
+	cam0 = cv::VideoCapture(DATASET_PATH + "left/000000.png", cv::CAP_IMAGES);
+	cam1 = cv::VideoCapture(DATASET_PATH + "right/000000.png", cv::CAP_IMAGES);
 
 	std::cout << "Reading Dataset: " + DATASET_PATH << std::endl;
 	if (!cam0.isOpened() || !cam1.isOpened())
@@ -59,7 +59,7 @@ int main()
 		cv::imshow("Stereo WebCam", StereoImage);
 		cv::imshow("Depth(CUDA)", DepthImage);
 		cv::imshow("Disparity(Open CV)", DisparityImage);
-		cv::waitKey(0);
+		cv::waitKey(1);
 	}
 
 	return 0;
