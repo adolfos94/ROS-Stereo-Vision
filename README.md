@@ -4,9 +4,9 @@ Computer stereo vision is the extraction of 3D information from digital images t
 
 ## Modules
 
-### [Stereo Rectification](/Stereo%20Calibration/)
+### [Stereo Rectification](https://github.com/adolfos94/Stereo-Calibration.git)
 
-### [Stereo Depth Perception - CUDA](/Stereo%20Depth%20Perception/)
+### [Stereo Depth Perception - CUDA](https://github.com/adolfos94/Stereo-Depth-Perception.git)
 
 # ROS Stereo Vision
 
