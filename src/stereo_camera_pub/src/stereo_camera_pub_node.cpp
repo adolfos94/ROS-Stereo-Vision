@@ -32,21 +32,13 @@ int main(int argc, char *argv[])
     cout << "Frames per second using cam1 : " << cam1.get(cv::CAP_PROP_FPS) << endl;
 
     // Load Stereo Calibration Parameters
+    cv::Matx33d t1(1.0247, 0.0190, 0.0854,
+                   -0.0133, 0.9991, 2.7859,
+                   0.0000, -0.0000, 1.0000);
 
-    cv::Mat Map1x, Map1y, Map2x, Map2y;
-    cv::FileStorage stereodatafs;
-
-    if (argv[1])
-    {
-        stereodatafs.open(STEREO_PARAMS_PATH, cv::FileStorage::READ);
-        stereodatafs["Map1x"] >> Map1x;
-        stereodatafs["Map1y"] >> Map1y;
-        stereodatafs["Map2x"] >> Map2x;
-        stereodatafs["Map2y"] >> Map2y;
-        stereodatafs.release();
-
-        cout << "Using instrinsic params: " << STEREO_PARAMS_PATH << endl;
-    }
+    cv::Matx33d t2(1.0098, 0.0044, -2.6261,
+                   -0.0008, 1.0049, 0.2402,
+                   0.0000, 0.0000, 1.0000);
 
     // Init the Node Publisher and configure it.
     ros::init(argc, argv, "stereo_image_publisher");
@@ -72,11 +64,8 @@ int main(int argc, char *argv[])
         }
 
         // Undistord stereo images
-        if (argv[1])
-        {
-            remap(cam0Frame, cam0Frame, Map1x, Map1y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
-            remap(cam1Frame, cam1Frame, Map2x, Map2y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
-        }
+        cv::warpPerspective(cam0Frame, cam0Frame, t1, cam0Frame.size(), cv::INTER_LINEAR);
+        cv::warpPerspective(cam1Frame, cam1Frame, t2, cam1Frame.size(), cv::INTER_LINEAR);
 
         imageLeftMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam0Frame).toImageMsg();
         imageRightMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam1Frame).toImageMsg();
