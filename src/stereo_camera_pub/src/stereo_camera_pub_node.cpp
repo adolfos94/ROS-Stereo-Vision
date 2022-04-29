@@ -64,17 +64,14 @@ int main(int argc, char *argv[])
         }
 
         // Undistord stereo images
-        cv::warpPerspective(cam0Frame, cam0Frame, t1, cam0Frame.size(), cv::INTER_LINEAR);
-        cv::warpPerspective(cam1Frame, cam1Frame, t2, cam1Frame.size(), cv::INTER_LINEAR);
+        // cv::warpPerspective(cam0Frame, cam0Frame, t1, cam0Frame.size(), cv::INTER_LINEAR);
+        // cv::warpPerspective(cam1Frame, cam1Frame, t2, cam1Frame.size(), cv::INTER_LINEAR);
 
         imageLeftMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam0Frame).toImageMsg();
         imageRightMsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cam1Frame).toImageMsg();
 
         pub_left_camera.publish(imageLeftMsg);
         pub_right_camera.publish(imageRightMsg);
-
-        if (cv::waitKey(30) == 27)
-            break;
 
         ros::spinOnce();
         loop_rate.sleep();

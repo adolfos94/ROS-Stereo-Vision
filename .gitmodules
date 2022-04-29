@@ -1,6 +1,4 @@
 [submodule "Stereo-Calibration"]
 	path = Stereo-Calibration
 	url = https://github.com/adolfos94/Stereo-Calibration.git
-[submodule "Stereo-Depth-Perception"]
-	path = Stereo-Depth-Perception
-	url = https://github.com/adolfos94/Stereo-Depth-Perception.git
+
